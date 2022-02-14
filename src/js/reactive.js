@@ -1,4 +1,5 @@
 import { createDep } from './dep'
+let activeEffect = null
 // 该结构中 储存的是    targt- Map 键值对
 const targetMap = new WeakMap()
 export function createGetter() {
@@ -25,20 +26,21 @@ export function track(target, key) {
   // 查询该target是否已被收集
   let depsMap = targetMap.get(target)
   if (!depsMap) {
-    depsMap = targetMap.set(target, (depsMap = new Map()))
+    targetMap.set(target, (depsMap = new Map()))
   }
-  let dep = depsMap.get(key)
-  if (!dep) {
-    dep = depsMap.set(key, (dep = createDep()))
+  let deps = depsMap.get(key)
+  if (!deps) {
+    deps = new Set()
+    depsMap.set(key, deps)
   }
-
-  trackEffects(dep, {})
 }
+
 export function trigger(target, type, key, value) {
   const depsMap = targetMap.get(target)
-  console.log('depsMap',depsMap);
+  console.log('depsMap', depsMap)
   if (!depsMap) return
-  let deps = depsMap[key]
+  let deps = depsMap.get(key)
+  console.log('deps', deps)
   deps.forEach((el) => {
     console.log('trigger e', el)
   })
@@ -50,4 +52,8 @@ export function reactive(target) {
   if (typeof target !== 'object') return console.log('传入的不是对象', target)
 
   return new Proxy(target, mutableHandlers)
+}
+
+export function effect(fn, options) {
+
 }

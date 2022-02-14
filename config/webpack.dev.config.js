@@ -66,10 +66,10 @@ let config = {
           },
         },
       },
-      {
-        test: /\.js$/,
-        use: ['babel-loader'],
-      },
+      // {
+      //   test: /\.js$/,
+      //   use: ['babel-loader'],
+      // },
       {
         test: /\.html$/,
         use: ['html-loader'],
