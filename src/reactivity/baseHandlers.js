@@ -8,12 +8,12 @@ function createGetter() {
   }
 }
 function createSetter() {
-  return function set(target, key, value) {
-    target[key] = value
-    return target
+  return function set(target, key, value, receiver) {
+    const result = Reflect.set(target, key, value, receiver)
+    trigger(target, key, value)
+    return result
   }
 }
-
 export const mutableHandlers = {
   get,
   set,
